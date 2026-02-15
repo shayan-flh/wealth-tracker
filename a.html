@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>مدیریت دارایی</title>
+
+    <link rel="stylesheet" href="style.css"> <!-- اختیاری -->
+
+    <style>
+        :root {
+            --gold: #ffcc33;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, .85);
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: tahoma, Segoe UI;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 30px;
+            width: 420px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .6);
+        }
+
+        .total-assets {
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .total-label {
+            color: #94a3b8;
+            font-size: .8rem
+        }
+
+        .total-value {
+            font-size: 2rem;
+            font-weight: 900
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mini-item {
+            background: #ffffff08;
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .mini-label {
+            font-size: .7rem;
+            color: #94a3b8
+        }
+
+        .mini-price {
+            color: var(--gold);
+            font-weight: 700
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--gold);
+            border: none;
+            padding: 14px;
+            border-radius: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: #000c;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 25px;
+            width: 320px;
+        }
+
+        .inv-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .inv-row input {
+            width: 80px;
+            background: #1e293b;
+            color: var(--gold);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status {
+            text-align: center;
+            font-size: .7rem;
+            color: #64748b;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <div class="total-assets">
+            <div class="total-label">کل دارایی</div>
+            <div id="grandTotal" class="total-value">0</div>
+            <div>تومان</div>
+        </div>
+
+        <div id="priceGrid" class="price-grid"></div>
+
+        <button id="openBtn" class="btn-action">
+            مدیریت دارایی
+        </button>
+
+        <div id="updateTime" class="status">
+            در حال دریافت اطلاعات...
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <h3 style="text-align:center">دارایی من</h3>
+
+            <div id="invList"></div>
+
+            <button id="saveBtn" class="btn-action">
+                ذخیره
+            </button>
+
+        </div>
+    </div>
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>
