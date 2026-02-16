@@ -2,12 +2,21 @@ const API =
     "https://brsapi.ir/Api/Market/Gold_Currency.php?key=BAfyT5VWlAcb4IpQ2KiTeMJpiNlN84L1";
 
 const weights = [50, 100, 150, 200, 250, 300, 350, 400, 500];
+// سکه‌های بانکی
+const coins = {
+    full: 0,   // سکه تمام
+    half: 0,   // نیم
+    quarter: 0 // ربع
+};
+
+let coinPrices = {};
 
 // دیتای ذخیره شده
 let inv = JSON.parse(localStorage.getItem("gold_db")) || {};
 weights.forEach(w => { if (!inv[w]) inv[w] = 0; });
 
 let dollars = Number(localStorage.getItem("usd_db")) || 0;
+let coinData = JSON.parse(localStorage.getItem("coin_db")) || coins;
 
 // قیمت‌ها
 let gold = 0;
@@ -34,6 +43,16 @@ async function loadData() {
 
         gold = Number(d.gold.find(x => x.symbol == "IR_GOLD_18K").price);
         usd = Number(d.currency.find(x => x.symbol == "USD").price);
+        const fullCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_EMAMI").price);
+        const halfCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_HALF").price);
+        const quarterCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_QUARTER").price);
+
+
+        coinPrices = {
+            full: fullCoin,
+            half: halfCoin,
+            quarter: quarterCoin
+        };
 
         render();
         calc();
@@ -81,6 +100,23 @@ function render() {
       <div class="mini-price">${Math.round(p).toLocaleString()}</div>
     </div>`;
     });
+
+    priceGrid.innerHTML += `
+<div class="mini-item">
+  <div class="mini-label">سکه تمام</div>
+  <div class="mini-price">${coinPrices.full?.toLocaleString() || 0}</div>
+</div>
+
+<div class="mini-item">
+  <div class="mini-label">نیم سکه</div>
+  <div class="mini-price">${coinPrices.half?.toLocaleString() || 0}</div>
+</div>
+
+<div class="mini-item">
+  <div class="mini-label">ربع سکه</div>
+  <div class="mini-price">${coinPrices.quarter?.toLocaleString() || 0}</div>
+</div>
+`;
 }
 
 
@@ -95,6 +131,10 @@ function calc() {
     });
 
     sum += dollars * usd;
+
+    sum += (coinPrices.full || 0) * (coinData.full || 0);
+    sum += (coinPrices.half || 0) * (coinData.half || 0);
+    sum += (coinPrices.quarter || 0) * (coinData.quarter || 0);
 
     grandTotal.innerText =
         Math.round(sum).toLocaleString();
@@ -131,6 +171,28 @@ function toggleModal(show) {
         oninput="saveUsd(this.value)">
     </div>`;
 
+        // سکه بانکی
+        invList.innerHTML += `
+<div class="inv-row">
+  <span>سکه تمام</span>
+  <input type="number" value="${coinData.full || 0}"
+   oninput="saveCoin('full',this.value)">
+</div>
+
+<div class="inv-row">
+  <span>نیم سکه</span>
+  <input type="number" value="${coinData.half || 0}"
+   oninput="saveCoin('half',this.value)">
+</div>
+
+<div class="inv-row">
+  <span>ربع سکه</span>
+  <input type="number" value="${coinData.quarter || 0}"
+   oninput="saveCoin('quarter',this.value)">
+</div>
+`;
+
+
     } else {
 
         // بسته شد → فوری حساب کن
@@ -150,6 +212,17 @@ window.saveUsd = function (v) {
     dollars = parseFloat(v) || 0;
     localStorage.setItem("usd_db", dollars);
 }
+
+window.saveCoin = function (type, val) {
+
+    coinData[type] = parseInt(val) || 0;
+
+    localStorage.setItem(
+        "coin_db",
+        JSON.stringify(coinData)
+    );
+}
+
 
 
 // رویدادها
