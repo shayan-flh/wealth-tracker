@@ -21,6 +21,7 @@ let coinData = JSON.parse(localStorage.getItem("coin_db")) || coins;
 // قیمت‌ها
 let gold = 0;
 let usd = 0;
+let ouncePrice = 0;
 
 
 // DOM
@@ -31,6 +32,11 @@ const invList = document.getElementById("invList");
 const openBtn = document.getElementById("openBtn");
 const saveBtn = document.getElementById("saveBtn");
 const updateTime = document.getElementById("updateTime");
+
+document.getElementById("ouncePrice").innerText =
+    ouncePrice
+        ? ouncePrice.toLocaleString()
+        : "--";
 
 
 // گرفتن دیتا
@@ -46,7 +52,9 @@ async function loadData() {
         const fullCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_EMAMI").price);
         const halfCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_HALF").price);
         const quarterCoin = Number(d.gold.find(x => x.symbol == "IR_COIN_QUARTER").price);
+        const ounceInfo = Number(d.gold.find(g => g.symbol === "XAUUSD").price)
 
+        ouncePrice = ounceInfo
 
         coinPrices = {
             full: fullCoin,
@@ -74,6 +82,14 @@ async function loadData() {
 function render() {
 
     priceGrid.innerHTML = "";
+
+    document.getElementById("ouncePrice").innerText =
+        ouncePrice
+            ? ouncePrice.toLocaleString()
+            : "--";
+
+
+
 
     // طلا
     priceGrid.innerHTML += `
